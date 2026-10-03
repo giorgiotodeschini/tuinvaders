@@ -1,0 +1,58 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "process",
+            "command": "dotnet",
+                "args": [
+                    "build",
+                    "${workspaceFolder}/TUInvaders/TUInvaders.csproj"
+                ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$csharp",
+            "presentation": {
+                "reveal": "silent",
+                "clear": true
+            },
+            "detail": "dotnet build TUInvaders"
+        },
+        {
+            "label": "restore",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["restore"],
+            "problemMatcher": "$msbuild",
+            "presentation": {
+                "reveal": "silent",
+                "clear": true
+            },
+            "detail": "dotnet restore"
+        },
+        {
+            "label": "run",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/TUInvaders/TUInvaders.csproj",
+                "--no-build"
+            ],
+            "dependsOn": "build",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": "$csharp",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "detail": "dotnet run TUInvaders"
+        }
+    ]
+}

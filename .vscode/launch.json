@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug TUInvaders",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/TUInvaders/bin/Debug/net10.0/TUInvaders.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TUInvaders",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "justMyCode": true
+        },
+        {
+            "name": "Run ConsoleInvaders (no debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/TUInvaders/bin/Debug/net10.0/TUInvaders.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TUInvaders",
+            "console": "externalTerminal",
+            "noDebug": true
+        }
+    ]
+}
