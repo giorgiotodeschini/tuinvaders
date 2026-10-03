@@ -7,6 +7,7 @@ using TUInvaders.Features.Initialization;
 using TUInvaders.Features.PlayerMovement;
 using TUInvaders.Features.Rendering;
 using TUInvaders.Features.Shooting;
+using TUInvaders.Features.WindowResizer;
 
 namespace TUInvaders.Common;
 
@@ -26,7 +27,8 @@ public class GameEngine(
     IUpdateLasersCommand updateLasersCommand,
     IUpdateAliensCommand updateAliensCommand,
     IAlienFireLaserCommand alienFireLaserCommand,
-    IShowEndScreenCommand showEndScreenCommand)
+    IShowEndScreenCommand showEndScreenCommand,
+    IHandleResizeCommand handleResizeCommand)
     : IGameEngine
 {
     private readonly GameState _gameState = gameState;
@@ -40,6 +42,7 @@ public class GameEngine(
     private readonly IUpdateAliensCommand _updateAliensCommand = updateAliensCommand;
     private readonly IAlienFireLaserCommand _alienFireLaserCommand = alienFireLaserCommand;
     private readonly IShowEndScreenCommand _showEndScreenCommand = showEndScreenCommand;
+    private readonly IHandleResizeCommand _handleResizeCommand = handleResizeCommand;
 
     public void Run()
     {
@@ -54,6 +57,9 @@ public class GameEngine(
             {
                 // Starting time calculation for to keep the FPC constant
                 var startTime = DateTime.UtcNow;
+
+                // Handle window resize
+                _handleResizeCommand.Execute();
 
                 // Retrieve input (not blocking)
                 var pressedKey = _inputProvider.GetLastKey();

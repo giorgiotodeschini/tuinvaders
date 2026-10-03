@@ -9,6 +9,7 @@ using TUInvaders.Features.Initialization;
 using TUInvaders.Features.PlayerMovement;
 using TUInvaders.Features.Rendering;
 using TUInvaders.Features.Shooting;
+using TUInvaders.Features.WindowResizer;
 
 namespace TUInvaders;
 
@@ -37,6 +38,7 @@ internal class Program
             .AddShootingSlice()
             .AddRenderigSlice()
             .AddGameOverSlice()
+            .AddWindowResizerSlice()
             .BuildServiceProvider();
 
         // Game Engine resolution and starting of the game llop

@@ -8,8 +8,8 @@ public record Laser(Position Position, bool IsPlayerLaser);
 
 public class GameState(int screenWidth, int screenHeight)
 {
-    public int ScreenWidth { get; } = screenWidth;
-    public int ScreenHeight { get; } = screenHeight;
+    public int ScreenWidth { get; private set; } = screenWidth;
+    public int ScreenHeight { get; private set; } = screenHeight;
 
     // Game loop status
     public bool IsRunning { get; set; } = true;
@@ -20,4 +20,10 @@ public class GameState(int screenWidth, int screenHeight)
     public Position PlayerPosition { get; set; } = new(screenWidth / 2, screenHeight - 4);
     public List<Alien> Aliens { get; set; } = [];
     public List<Laser> Lasers { get; set; } = [];
+
+    public void UpdateDimensions(int width, int height)
+    {
+        ScreenWidth = width;
+        ScreenHeight = height;
+    }
 }
