@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using TUInvaders.Common;
+using TUInvaders.Common.Audio;
 using TUInvaders.Domain;
 using TUInvaders.Features.AlienAI;
 using TUInvaders.Features.GameOverDisplay;
@@ -25,13 +26,19 @@ internal class Program
         var initialWidth = AnsiConsole.Console.Profile.Width;
         var initialHeight = AnsiConsole.Console.Profile.Height;
 
+        var audioService = new SharpAudioService();
+        audioService.RegisterSound(Sounds.PlayerLaser, "Assets/player_laser.wav");
+        audioService.RegisterSound(Sounds.AlienLaser, "Assets/alien_laser.wav");
+        audioService.RegisterSound(Sounds.Explosion, "Assets/explosion.wav");
+
         // Dependency Injection Container configuration
-        var serviceProvider = new ServiceCollection()
+        using var serviceProvider = new ServiceCollection()
             .AddSingleton(new GameState(initialWidth, initialHeight)) // Global state
             // Common infrastructure
             .AddSingleton<IAnsiConsole>(AnsiConsole.Console)
             .AddSingleton<IGameEngine, GameEngine>()
             .AddSingleton<IInputProvider, InputProvider>()
+            .AddSingleton<IAudioService>(audioService)
             .AddInitializationSlice()
             .AddPlayerMovementSlice()
             .AddAlienAISlice()
@@ -40,8 +47,6 @@ internal class Program
             .AddGameOverSlice()
             .AddWindowResizerSlice()
             .BuildServiceProvider();
-
-        // Game Engine resolution and starting of the game llop
         try
         {
             var gameEngine = serviceProvider.GetRequiredService<IGameEngine>();
@@ -53,7 +58,6 @@ internal class Program
         }
         finally
         {
-            // Restore cursor when the game is finished
             AnsiConsole.Cursor.Show();
         }
     }

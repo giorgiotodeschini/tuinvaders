@@ -1,11 +1,14 @@
 using System.Reflection.Metadata.Ecma335;
+using TUInvaders.Common.Audio;
 using TUInvaders.Domain;
 
 namespace TUInvaders.Features.Shooting;
 
-public sealed class UpdateLasersCommand(GameState gameState) : IUpdateLasersCommand
+public sealed class UpdateLasersCommand(GameState gameState, IAudioService audioService) 
+    : IUpdateLasersCommand
 {
     private readonly GameState _gameState = gameState;
+    private readonly IAudioService _audioService = audioService;
 
     public void Execute()
     {
@@ -39,6 +42,8 @@ public sealed class UpdateLasersCommand(GameState gameState) : IUpdateLasersComm
                 {
                     hitAliens.Add(collidedAlien);
                     _gameState.Score += collidedAlien.ScoreValue;
+
+                    _audioService.Play(Sounds.Explosion);
                 }
                 else
                 {

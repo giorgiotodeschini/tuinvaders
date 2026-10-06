@@ -1,13 +1,15 @@
 using System.IO.Pipes;
 using System.Reflection.Metadata.Ecma335;
+using TUInvaders.Common.Audio;
 using TUInvaders.Domain;
 
 namespace TUInvaders.Features.Shooting;
 
-public sealed class AlienFireLaserCommand(GameState gamestate) 
+public sealed class AlienFireLaserCommand(GameState gamestate, IAudioService audioService) 
     : IAlienFireLaserCommand
 {
     private readonly GameState _gameState = gamestate;
+    private readonly IAudioService _audioService = audioService;
     private readonly Random _random = new();
     private const double FireProbability = 0.02; // 2%
 
@@ -32,6 +34,8 @@ public sealed class AlienFireLaserCommand(GameState gamestate)
             // The enemy laser spawn under the alien
             var spawnPosition  = new Position(shooter.Position.X, shooter.Position.Y + 1);
             _gameState.Lasers.Add(new (spawnPosition, IsPlayerLaser: false));
+
+            _audioService.Play(Sounds.AlienLaser);
         }
     }
 }

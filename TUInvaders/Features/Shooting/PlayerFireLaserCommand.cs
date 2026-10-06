@@ -1,10 +1,13 @@
+using TUInvaders.Common.Audio;
 using TUInvaders.Domain;
 
 namespace TUInvaders.Features.Shooting;
 
-public class PlayerFireLaserCommand(GameState gameState) : IPlayerFireLaserCommand
+public class PlayerFireLaserCommand(GameState gameState, IAudioService audioService) 
+    : IPlayerFireLaserCommand
 {
     private readonly GameState _gameState = gameState;
+    private readonly IAudioService _audioService = audioService;
     private const int MaxPlayerLasers = 3;
 
     public void Execute(ConsoleKey? key)
@@ -17,6 +20,8 @@ public class PlayerFireLaserCommand(GameState gameState) : IPlayerFireLaserComma
             var spawnPosition = new Position(_gameState.PlayerPosition.X, 
                 _gameState.PlayerPosition.Y - 2);
             _gameState.Lasers.Add(new(spawnPosition, IsPlayerLaser: true));
+
+            _audioService.Play(Sounds.PlayerLaser);
         }
     }
 }
