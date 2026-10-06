@@ -10,6 +10,7 @@ This project was built as an architectural exercise to demonstrate how modern en
 *   **Rich Text User Interface (TUI):** Powered by `Spectre.Console` utilizing 24-bit TrueColor rendering, asynchronous non-blocking input, and a high-performance double-buffered canvas to guarantee zero screen flickering at a stable **30 FPS**.
 *   **Fully Responsive Alien Grid:** The total number, spacing, and distribution of the alien invaders are parameterized dynamically at startup based on the current dimensions (`Console.WindowWidth`/`Height`) of the user's terminal window.
 *   **Live Window Resizing:** Handles runtime terminal window stretching or shrinking gracefully by dynamically scaling coordinate bounds and entity positioning mid-game without application crashes.
+*   **Immersive Cross-Platform Audio:** Asynchronous polyphonic sound effects (lasers, explosions) running natively via `SharpAudio` mapping underlying native OS audio APIs (`XAudio2` on Windows, `OpenAL` on Linux/macOS).
 
 ---
 
@@ -25,6 +26,7 @@ TUInvaders/
 │
 ├── Assets/                         # Sound effects (.wav files)
 ├── Common/                         # Cross-cutting concerns / Infrastructure
+│   ├── Audio/                      # Audio abstractions & Native Drivers Bridge
 │   ├── IGameEngine.cs              # Core deterministic Game Loop coordinator
 │   └── InputProvider.cs            # Asynchronous keyboard input handler
 │
@@ -66,7 +68,7 @@ Abstractions are kept concise and tailored. Slices expose atomized command inter
 Instead of forcing a monolithic `IGameService` interface containing `Update()`, `Render()`, and `Input()` methods onto every subsystem, interfaces are decoupled into atomic, behavior-specific structures generally exposing a single `Execute()` method. Components only depend on the narrow contract they actually execute.
 
 ### 5. Dependency Inversion Principle (DIP)
-High-level modules do not depend on low-level modules; both depend on abstractions. Crucially, the system decouples third-party presentation frameworks. By injecting `IAnsiConsole` (Spectre) into our commands via constructor injection, the game rules are shielded against infrastructural changes, making unit testing and potential framework replacement straightforward.
+High-level modules do not depend on low-level modules; both depend on abstractions. Crucially, the system decouples third-party presentation frameworks. By injecting `IAnsiConsole` (Spectre) and `IAudioService` (SharpAudio) into our commands via constructor injection, the game rules are shielded against infrastructural changes, making unit testing and potential framework replacement straightforward.
 
 ---
 
@@ -99,3 +101,4 @@ dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFil
 ```bash
 dotnet publish -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
 ```
+*(Note: `-p:PublishTrimmed=false` is enforced to prevent the IL Trimmer from discarding native external P/Invoke bindings required by the `SharpAudio` drivers).*
